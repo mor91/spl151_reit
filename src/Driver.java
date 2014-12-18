@@ -17,6 +17,6 @@ public class Driver {
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
         Parsing parse=new Parsing();
         parse.parseAssets("src/Assets.xml");
-        //parse.pa
+        parse.parseCostumersGroup("src/CustomersGroups.xml");
     }
 }
