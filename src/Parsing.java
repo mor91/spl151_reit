@@ -76,7 +76,7 @@ public class Parsing {
                     if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                             Element eElement = (Element) nNode;
                             System.out.println("GroupManagerName : " + eElement.getElementsByTagName("GroupManagerName").item(0).getTextContent());
-                           
+                            System.out.println("Customers :");
                             NodeList customersList=eElement.getElementsByTagName("Customer");
                             for(int i=0;i<customersList.getLength();i++){
                                 Node costumerNode=customersList.item(i);
@@ -86,7 +86,7 @@ public class Parsing {
                                 System.out.println("MinimumDamage : " + element.getElementsByTagName("MinimumDamage").item(0).getTextContent());
                                 System.out.println("MaximumDamage : " + element.getElementsByTagName("MaximumDamage").item(0).getTextContent());
                             }
-                            
+                            System.out.println("MRentalRequests :");
                             NodeList rentalRequestList=eElement.getElementsByTagName("Request");
                             for(int i=0;i<rentalRequestList.getLength();i++){
                                 Node requestNode=rentalRequestList.item(i);
@@ -103,5 +103,45 @@ public class Parsing {
 	e.printStackTrace();
         }
     }
+    public static void parseAssetContentsRepairDetails(String fileName){
+        try{
+            File fXmlFile = new File(fileName);
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(fXmlFile);
+            doc.getDocumentElement().normalize();
+            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+            NodeList nList = doc.getElementsByTagName("AssetContent");
+            for (int temp = 0; temp < nList.getLength(); temp++) {
+                    Node nNode = nList.item(temp);
+                    System.out.println("\nCurrent Element :" + nNode.getNodeName());
+                    
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                            Element eElement = (Element) nNode;
+                            System.out.println("Name : " + eElement.getElementsByTagName("Name").item(0).getTextContent());
+                            System.out.println("Tools :");
+                            NodeList toolsList=eElement.getElementsByTagName("Tool");
+                            for(int i=0;i<toolsList.getLength();i++){
+                                Node toolNode=toolsList.item(i);
+                                Element element=(Element) toolNode;
+                                System.out.println("Name : " + element.getElementsByTagName("Name").item(0).getTextContent());
+                                System.out.println("Quantity : " + element.getElementsByTagName("Quantity").item(0).getTextContent());
+                             }
+                            System.out.println("Materials :");
+                            NodeList materialsList=eElement.getElementsByTagName("Material");
+                            for(int i=0;i<materialsList.getLength();i++){
+                                Node materialNode=materialsList.item(i);
+                                Element element=(Element) materialNode;
+                                System.out.println("Name : " + element.getElementsByTagName("Name").item(0).getTextContent());
+                                System.out.println("Quantity : " + element.getElementsByTagName("Quantity").item(0).getTextContent());
+                            }
+                    }
+            }
+
+        }catch (Exception e) {
+	e.printStackTrace();
+        }
+    }
+    
     
 }

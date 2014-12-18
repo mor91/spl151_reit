@@ -18,5 +18,6 @@ public class Driver {
         Parsing parse=new Parsing();
         parse.parseAssets("src/Assets.xml");
         parse.parseCostumersGroup("src/CustomersGroups.xml");
+        parse.parseAssetContentsRepairDetails("src/AssetContentsRepairDetails.xml");
     }
 }
