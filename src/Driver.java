@@ -19,5 +19,6 @@ public class Driver {
         parse.parseAssets("src/Assets.xml");
         parse.parseCostumersGroup("src/CustomersGroups.xml");
         parse.parseAssetContentsRepairDetails("src/AssetContentsRepairDetails.xml");
+        parse.parseInitialData("src/InitialData.xml");
     }
 }

@@ -23,7 +23,7 @@ public class Parsing {
     public Parsing() {
     }
     
-    public static void parseAssets(String fileName) throws SAXException {
+    public static Document parseAssets(String fileName) throws SAXException {
         try{
             File fXmlFile = new File(fileName);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -54,13 +54,15 @@ public class Parsing {
                             }
                     }
             }
+            return doc;
 
         }catch (Exception e) {
 	e.printStackTrace();
         }
-    
+        
+        return null;
     }
-    public static void parseCostumersGroup(String fileName){
+    public static Document parseCostumersGroup(String fileName){
         try{
             File fXmlFile = new File(fileName);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -98,12 +100,14 @@ public class Parsing {
                             }
                     }
             }
+            return doc;
 
         }catch (Exception e) {
 	e.printStackTrace();
         }
+        return null;
     }
-    public static void parseAssetContentsRepairDetails(String fileName){
+    public static Document parseAssetContentsRepairDetails(String fileName){
         try{
             File fXmlFile = new File(fileName);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -137,11 +141,59 @@ public class Parsing {
                             }
                     }
             }
+            return doc;
 
         }catch (Exception e) {
 	e.printStackTrace();
         }
+        return null;
     }
-    
+    public static Document parseInitialData(String fileName){
+        try{
+            File fXmlFile = new File(fileName);
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(fXmlFile);
+            doc.getDocumentElement().normalize();
+            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+            NodeList node1=doc.getElementsByTagName("Warehouse");
+            Element eElement1 = (Element) node1.item(0);
+                System.out.println("Tools :");
+                NodeList toolsList=eElement1.getElementsByTagName("Tool");
+                for(int i=0;i<toolsList.getLength();i++){
+                    Node toolNode=toolsList.item(i);
+                    Element element=(Element) toolNode;
+                    System.out.println("name : " + element.getElementsByTagName("name").item(0).getTextContent());
+                    System.out.println("quantity : " + element.getElementsByTagName("quantity").item(0).getTextContent());
+                }
+                NodeList materialList=eElement1.getElementsByTagName("Material");
+                for(int i=0;i<materialList.getLength();i++){
+                    Node materialNode=materialList.item(i);
+                    Element element=(Element) materialNode;
+                    System.out.println("name : " + element.getElementsByTagName("name").item(0).getTextContent());
+                    System.out.println("quantity : " + element.getElementsByTagName("quantity").item(0).getTextContent());
+                }
+                
+            
+            NodeList node2=doc.getElementsByTagName("Staff");
+            Element eElement2 = (Element) node2.item(0);
+                System.out.println("clerks :");
+                NodeList clerkList=eElement2.getElementsByTagName("Clerk");
+                for(int i=0;i<clerkList.getLength();i++){
+                    Node clerkNode=clerkList.item(i);
+                    Element element=(Element) clerkNode;
+                    System.out.println("name : " + element.getElementsByTagName("name").item(0).getTextContent());
+                    Node locationNode=eElement2.getElementsByTagName("Location").item(0);
+                    System.out.println("Location : " + locationNode.getAttributes().getNamedItem("x")+locationNode.getAttributes().getNamedItem("y"));
+                }
+                System.out.println("NumberOfMaintenancePersons: "+eElement2.getElementsByTagName("NumberOfMaintenancePersons").item(0).getTextContent());             
+                System.out.println("TotalNumberOfRentalRequests: "+eElement2.getElementsByTagName("TotalNumberOfRentalRequests").item(0).getTextContent());
+            
+                return doc;
+             }catch (Exception e) {
+	e.printStackTrace();
+        }
+        return null;
+    }
     
 }
