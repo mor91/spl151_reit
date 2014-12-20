@@ -14,4 +14,13 @@ public class RentalRequest {
     int _durationOfStay;
     Asset _asset;
     String _requestStatus;
+
+    public RentalRequest(String _id, String _assetType, int _assetSize, int _durationOfStay) {
+        this._id = _id;
+        this._assetType = _assetType;
+        this._assetSize = _assetSize;
+        this._durationOfStay = _durationOfStay;
+        //this._requestStatus =;
+    }
+    
 }

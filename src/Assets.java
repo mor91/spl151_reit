@@ -9,5 +9,24 @@ import java.util.Map;
  * @author chen
  */
 public class Assets{
-   
+    Map<String, Asset> _assets;
+    Map<String, Asset> _damagedAssets;
+
+    public Assets() {
+    
+    }
+    
+
+    public Assets(Map<String, Asset> _assets) {
+        this._assets = _assets;
+    }
+
+    public void addAsset(Asset asset) {
+        //this._assets.put(asset._name, asset);
+    }
+
+    public Map<String, Asset> getAssets() {
+        return _assets;
+    }
+    
 }

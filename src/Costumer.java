@@ -18,4 +18,12 @@ public class Costumer {
         }
         else return 0;
     }
+
+    public Costumer(String _name, String _vandalismType, int _minimumDamage, int _maximumDamage) {
+        this._name = _name;
+        this._vandalismType = _vandalismType;
+        this._minimumDamage = _minimumDamage;
+        this._maximumDamage = _maximumDamage;
+    }
+    
 }

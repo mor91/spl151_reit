@@ -42,7 +42,7 @@ public class Parsing {
                             System.out.println("Type : " + eElement.getElementsByTagName("Type").item(0).getTextContent());
                             System.out.println("Size : " + eElement.getElementsByTagName("Size").item(0).getTextContent());
                             Node locationNode=eElement.getElementsByTagName("Location").item(0);
-                            System.out.println("Location : " + locationNode.getAttributes().getNamedItem("x")+locationNode.getAttributes().getNamedItem("y"));
+                            System.out.println("Location : " + locationNode.getAttributes().getNamedItem("x").getNodeValue()+locationNode.getAttributes().getNamedItem("y").getNodeValue());
                             System.out.println("CostPerNight : " + eElement.getElementsByTagName("CostPerNight").item(0).getTextContent());
                            
                             NodeList assetContentsList=eElement.getElementsByTagName("AssetContent");
@@ -88,7 +88,7 @@ public class Parsing {
                                 System.out.println("MinimumDamage : " + element.getElementsByTagName("MinimumDamage").item(0).getTextContent());
                                 System.out.println("MaximumDamage : " + element.getElementsByTagName("MaximumDamage").item(0).getTextContent());
                             }
-                            System.out.println("MRentalRequests :");
+                            System.out.println("RentalRequests :");
                             NodeList rentalRequestList=eElement.getElementsByTagName("Request");
                             for(int i=0;i<rentalRequestList.getLength();i++){
                                 Node requestNode=rentalRequestList.item(i);

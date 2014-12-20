@@ -12,10 +12,22 @@ public class Asset{
     String _name;
     String _type;
     Location _location;
-    Map<String, AssetContent> _assetContents;
+    Map<String, AssetContent> _assetContents;//key:name of assetContent 
     String _status;
     int _costPerNight;
     int _size;
+
+    public Asset(String _name, String _type, Location _location,  int _costPerNight, int _size) {
+        this._name = _name;
+        this._type = _type;
+        this._location = _location;
+        this._status = "AVAILABLE";
+        this._costPerNight = _costPerNight;
+        this._size = _size;
+    }
+    public void addAssetContent(AssetContent assetContent){
+        
+    } 
     
     
 }

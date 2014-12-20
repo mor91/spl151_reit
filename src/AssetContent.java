@@ -10,10 +10,17 @@
 public class AssetContent{
     String _name;
     double _health;
-    int _repairCostMultiplier;
+    double _repairCostMultiplier;
    
     public double repairTime(){//calculate the time it takes the item to e repaired
         return (100-_health)*_repairCostMultiplier;
     } 
+
+    public AssetContent(String _name,  double _repairCostMultiplier) {
+        this._name = _name;
+        this._health = 100;
+        this._repairCostMultiplier = _repairCostMultiplier;
+    }
+    
     
 }

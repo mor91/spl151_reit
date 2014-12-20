@@ -11,6 +11,11 @@ public class CostumerGroupDetails {
     //collection o rental request
     //collection of costumers
     String _groupManagerName;
+
+    public CostumerGroupDetails(String _groupManagerName) {
+        this._groupManagerName = _groupManagerName;
+    }
+    
     public void addCostumer(){
         
     }
