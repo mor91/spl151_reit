@@ -8,5 +8,13 @@
  * @author chen
  */
 public class RepairToolInformation{
+
+    
+    //collection of repair tools and quantity
+    public RepairToolInformation() {
+    }
+    public void addRepairTool(RepairTool tool){
+        
+    }
     
 }

@@ -8,5 +8,13 @@
  * @author chen
  */
 public class RepairMaterialInformation {
+    //collection of repair material and quantity
+    
+    public RepairMaterialInformation() {
+    }
+
+    public void addRepairMaterial(RepairMaterial material){
+        
+    }
     
 }
