@@ -1,4 +1,5 @@
 import java.util.Map;
+import java.util.TreeMap;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,7 +13,7 @@ public class Asset{
     String _name;
     String _type;
     Location _location;
-    Map<String, AssetContent> _assetContents;//key:name of assetContent 
+    Map<String, AssetContent> _assetContents=new TreeMap();//key:name of assetContent 
     String _status;
     int _costPerNight;
     int _size;
@@ -26,7 +27,7 @@ public class Asset{
         this._size = _size;
     }
     public void addAssetContent(AssetContent assetContent){
-        
+        _assetContents.put(assetContent._name, assetContent);
     } 
     
     

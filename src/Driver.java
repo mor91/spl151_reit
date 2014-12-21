@@ -42,7 +42,7 @@ public class Driver {
                                 AssetContent assetContent=new AssetContent(assetContentName, repairMultiplier);
                                 asset.addAssetContent(assetContent);
                             }
-                            assets.addAsset(asset);
+                            assets.addAsset(asset);//semaphore
                             
                     }
             }
@@ -102,8 +102,8 @@ public class Driver {
                                 String toolName = element.getElementsByTagName("Name").item(0).getTextContent();
                                 int quantity= Integer.parseInt(element.getElementsByTagName("Quantity").item(0).getTextContent());
                                 //fint tool on tool collection
-                                RepairTool repairTool=new RepairTool(toolName, quantity);
-                                repairToolInformation.addRepairTool(repairTool);
+                                //RepairTool repairTool=new RepairTool(toolName, quantity);
+                                repairToolInformation.addRepairTool(toolName , quantity);
                             }
                             RepairMaterialInformation repairMaterialInformation=new RepairMaterialInformation();
                             //link RepairMaterialInformation to the content
@@ -114,8 +114,8 @@ public class Driver {
                                 String materialName =element.getElementsByTagName("Name").item(0).getTextContent();
                                 int quantity= Integer.parseInt(element.getElementsByTagName("Quantity").item(0).getTextContent());
                                 //fint Material on material collection
-                                RepairMaterial repairMaterial=new RepairMaterial(materialName, quantity);
-                                repairMaterialInformation.addRepairMaterial(repairMaterial);
+                                //RepairMaterial repairMaterial=new RepairMaterial(materialName, quantity);
+                                repairMaterialInformation.addRepairMaterial(materialName, quantity);
                             }
                     }
             }

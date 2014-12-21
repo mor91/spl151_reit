@@ -1,3 +1,7 @@
+
+import java.util.Map;
+import java.util.TreeMap;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,11 +14,13 @@
 public class RepairToolInformation{
 
     
-    //collection of repair tools and quantity
+    Map<String, Integer> _repairToolMap=new TreeMap<>();
+   
     public RepairToolInformation() {
     }
-    public void addRepairTool(RepairTool tool){
-        
+   
+    public void addRepairTool(String tool, int quantity){
+        _repairToolMap.put(tool,quantity);
     }
     
 }
