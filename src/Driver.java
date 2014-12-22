@@ -1,6 +1,9 @@
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Semaphore;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,9 +21,8 @@ import org.xml.sax.SAXException;
  * @author chen
  */
 public class Driver {
-    public  static Assets parsingAssets(Document doc){
+    public  static void parsingAssets(Document doc, Assets assets){
         NodeList nList = doc.getElementsByTagName("Asset");
-        Assets assets=new Assets();
             for (int temp = 0; temp < nList.getLength(); temp++) {
                     Node nNode = nList.item(temp);
                     if (nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -38,19 +40,22 @@ public class Driver {
                                 Element element=(Element) contentsNode;
                                 String assetContentName=element.getElementsByTagName("Name").item(0).getTextContent();
                                 double repairMultiplier=Double.parseDouble(element.getElementsByTagName("RepairMultiplier").item(0).getTextContent());
-                                // check on asset content collection first 
-                                AssetContent assetContent=new AssetContent(assetContentName, repairMultiplier);
+                                AssetContent assetContent;
+                                if(asset._assetContents.containsValue(asset)){
+                                    assetContent=asset._assetContents.get(assetContentName);
+                                }
+                                else assetContent=new AssetContent(assetContentName, repairMultiplier);
                                 asset.addAssetContent(assetContent);
                             }
                             assets.addAsset(asset);//semaphore
                             
                     }
+
             }
             
-            return assets;
             
     }
-    public static void parsingCostumersGroup(Document doc){
+    public static void parsingCostumersGroup(Document doc, Management management){
         NodeList nList = doc.getElementsByTagName("CustomerGroupDetails");
             for (int temp = 0; temp < nList.getLength(); temp++) {
                     Node nNode = nList.item(temp);
@@ -58,6 +63,7 @@ public class Driver {
                             Element eElement = (Element) nNode;
                             String groupManagerName = eElement.getElementsByTagName("GroupManagerName").item(0).getTextContent();
                             CostumerGroupDetails costumerGroupDetails=new CostumerGroupDetails(groupManagerName);
+                            management.addCostumerGroup(costumerGroupDetails);
                             NodeList customersList=eElement.getElementsByTagName("Customer");
                             for(int i=0;i<customersList.getLength();i++){
                                 Node costumerNode=customersList.item(i);
@@ -67,7 +73,7 @@ public class Driver {
                                 int minimumDamage  = Integer.parseInt(element.getElementsByTagName("MinimumDamage").item(0).getTextContent());
                                 int maximumDamage  = Integer.parseInt(element.getElementsByTagName("MaximumDamage").item(0).getTextContent());
                                 Costumer costumer=new Costumer(customerName, vandalism, minimumDamage, maximumDamage);
-                                costumerGroupDetails.addCostumer();
+                                costumerGroupDetails.addCostumer(costumer);
                             }
                             NodeList rentalRequestList=eElement.getElementsByTagName("Request");
                             for(int i=0;i<rentalRequestList.getLength();i++){
@@ -78,51 +84,45 @@ public class Driver {
                                 int size = Integer.parseInt(element.getElementsByTagName("Size").item(0).getTextContent());
                                 int duration = Integer.parseInt(element.getElementsByTagName("Duration").item(0).getTextContent());
                                 RentalRequest rentalRequest=new RentalRequest(id, type, size, duration);
-                                costumerGroupDetails.addRentalRequest();
+                                costumerGroupDetails.addRentalRequest(rentalRequest);
                             }
                             
                     }
             }
         
     }
-    public static void parsingAssetContentsRepairDetails(Document doc){
+    public static void parsingAssetContentsRepairDetails(Document doc, Management management){
         NodeList nList = doc.getElementsByTagName("AssetContent");
             for (int temp = 0; temp < nList.getLength(); temp++) {
                     Node nNode = nList.item(temp);
                     if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                             Element eElement = (Element) nNode;
-                            //find asset content in the collection
                             String assetContentName=eElement.getElementsByTagName("Name").item(0).getTextContent();
                             NodeList toolsList=eElement.getElementsByTagName("Tool");
                             RepairToolInformation repairToolInformation=new RepairToolInformation();
-                            //link RepairToolInormation to the content
                             for(int i=0;i<toolsList.getLength();i++){
                                 Node toolNode=toolsList.item(i);
                                 Element element=(Element) toolNode;
                                 String toolName = element.getElementsByTagName("Name").item(0).getTextContent();
                                 int quantity= Integer.parseInt(element.getElementsByTagName("Quantity").item(0).getTextContent());
-                                //fint tool on tool collection
-                                //RepairTool repairTool=new RepairTool(toolName, quantity);
                                 repairToolInformation.addRepairTool(toolName , quantity);
+                                management.addItemRepairTool(assetContentName, repairToolInformation);
                             }
                             RepairMaterialInformation repairMaterialInformation=new RepairMaterialInformation();
-                            //link RepairMaterialInformation to the content
                             NodeList materialsList=eElement.getElementsByTagName("Material");
                             for(int i=0;i<materialsList.getLength();i++){
                                 Node materialNode=materialsList.item(i);
                                 Element element=(Element) materialNode;
                                 String materialName =element.getElementsByTagName("Name").item(0).getTextContent();
                                 int quantity= Integer.parseInt(element.getElementsByTagName("Quantity").item(0).getTextContent());
-                                //fint Material on material collection
-                                //RepairMaterial repairMaterial=new RepairMaterial(materialName, quantity);
                                 repairMaterialInformation.addRepairMaterial(materialName, quantity);
+                                management.addItemRepairMaterial(assetContentName, repairMaterialInformation);
                             }
                     }
             }
         
     }
-    public static void parsingInitialData(Document doc){
-        Warehouse warehouse=new Warehouse();
+    public static void parsingInitialData(Document doc, Management management, Warehouse warehouse){
         NodeList node1=doc.getElementsByTagName("Warehouse");
             Element eElement1 = (Element) node1.item(0);
                 NodeList toolsList=eElement1.getElementsByTagName("Tool");
@@ -132,7 +132,7 @@ public class Driver {
                     String toolName = element.getElementsByTagName("name").item(0).getTextContent();
                     int quantity =Integer.parseInt( element.getElementsByTagName("quantity").item(0).getTextContent());
                     RepairTool repairTool=new RepairTool(toolName, quantity);
-                    //initial tool collection 
+//                    warehouse.addRepairTool(repairTool); 
                 }
                 NodeList materialList=eElement1.getElementsByTagName("Material");
                 for(int i=0;i<materialList.getLength();i++){
@@ -141,7 +141,7 @@ public class Driver {
                     String materialName = element.getElementsByTagName("name").item(0).getTextContent();
                     int quantity = Integer.parseInt(element.getElementsByTagName("quantity").item(0).getTextContent());
                     RepairMaterial repairMaterial=new RepairMaterial(materialName, quantity);
-                    //initial Material collection
+ //                   warehouse.addRepairMaterial(repairMaterial);
                 }
                 
             
@@ -155,10 +155,11 @@ public class Driver {
                     Node locationNode=eElement2.getElementsByTagName("Location").item(0);
                     Location clerkLocation=new Location(Integer.parseInt(locationNode.getAttributes().getNamedItem("x").getNodeValue()),Integer.parseInt(locationNode.getAttributes().getNamedItem("y").getNodeValue()));
                     ClerkDetails clerkDetails=new ClerkDetails(clerkName, clerkLocation);
+                    management.addClerk(clerkDetails);
                 }
                 int numberOfMaintenancePersons=Integer.parseInt(eElement2.getElementsByTagName("NumberOfMaintenancePersons").item(0).getTextContent());             
                 int totalNumberOfRentalRequests=Integer.parseInt(eElement2.getElementsByTagName("TotalNumberOfRentalRequests").item(0).getTextContent());
-            
+                
     }
     
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
@@ -167,10 +168,14 @@ public class Driver {
         Document doc2=parse.parseCostumersGroup("src/CustomersGroups.xml");
         Document doc3=parse.parseAssetContentsRepairDetails("src/AssetContentsRepairDetails.xml");
         Document doc4=parse.parseInitialData("src/InitialData.xml");
-        parsingInitialData(doc4);
-        Assets assets=parsingAssets(doc1);
-        parsingCostumersGroup(doc2);
-        parsingAssetContentsRepairDetails(doc3);
+        
+        Assets assets=new Assets();
+        Warehouse warehouse=new Warehouse();
+        Management management=new Management(warehouse,assets);
+        parsingInitialData(doc4 , management, warehouse);
+        parsingAssets(doc1, assets);
+        parsingCostumersGroup(doc2, management);
+        parsingAssetContentsRepairDetails(doc3, management);
         
     }
 }

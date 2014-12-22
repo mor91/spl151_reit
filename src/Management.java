@@ -14,16 +14,22 @@ public class Management {
     Warehouse _warehouse;
     //collection of repair toolInformation
     //collection of repair materialInformation
-    public void addClerk(){
+
+    public Management( Warehouse _warehouse,Assets _assets) {
+        this._assets = _assets;
+        this._warehouse = _warehouse;
+    }
+    
+    public void addClerk(ClerkDetails clerkDetails){
         
     } 
-    public void addCostumerGroup(){
+    public void addCostumerGroup(CostumerGroupDetails costumerGroupDetails){
         
     }
-    public void addItemRepairTool(){
+    public void addItemRepairTool(String contentName,RepairToolInformation repairToolInformation){
         
     }
-    public void addItemRepairMaterial(){
+    public void addItemRepairMaterial(String contentName, RepairMaterialInformation repairMaterialInformation){
         
     }
 }

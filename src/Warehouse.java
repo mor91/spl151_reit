@@ -16,23 +16,23 @@ public class Warehouse implements IWarehouse{
 
     @Override
     public void acquireTool(String toolName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        _repairMaterials.get(toolName)._quantity--;
     }
 
     @Override
     public void releaseTool(String toolName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        _repairTools.get(toolName)._quantity++;
     }
 
     @Override
     public void consumeMaterial(String materialName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        _repairMaterials.get(materialName)._quantity--;
     }
-    public int getToolCount(String toolName){
-        return _repairTools.get(toolName).getQuantity();
+    public void addRepairTool(RepairTool repairTool){
+        _repairTools.put(repairTool._name, repairTool);
     }
-    public int getMaterialCount(String materialName){
-        return _repairMaterials.get(materialName).getQuantity();
+    public void addRepairMaterial(RepairMaterial repairMaterial){
+        _repairMaterials.put(repairMaterial._name, repairMaterial);
+                
     }
-
 }
