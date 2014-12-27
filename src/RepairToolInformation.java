@@ -14,7 +14,7 @@ import java.util.TreeMap;
 public class RepairToolInformation{
 
     
-    private Map<String, Integer> _repairToolMap=new TreeMap<>();
+    Map<String, Integer> _repairToolMap=new TreeMap<>();
    
     public RepairToolInformation() {
     }

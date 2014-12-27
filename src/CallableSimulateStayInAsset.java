@@ -15,6 +15,7 @@ public class CallableSimulateStayInAsset implements Callable{
     private Customer _customer;
 
     public CallableSimulateStayInAsset(Customer _customer) {
+        //sleep(stayInAsset)
         this._customer = _customer;
     }
     
