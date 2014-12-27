@@ -7,7 +7,17 @@
  *
  * @author chen
  */
-public class RunnableCostumerGroupManager {
-    CostumerGroupDetails _costumerGroupDetails;
+public class RunnableCostumerGroupManager implements Runnable{
+    CustomerGroupDetails _costumerGroupDetails;
+
+    public RunnableCostumerGroupManager(CustomerGroupDetails _costumerGroupDetails) {
+        this._costumerGroupDetails = _costumerGroupDetails;
+    }
+    
+    
+    @Override
+    public void run() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

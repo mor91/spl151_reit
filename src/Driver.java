@@ -62,7 +62,7 @@ public class Driver {
                     if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                             Element eElement = (Element) nNode;
                             String groupManagerName = eElement.getElementsByTagName("GroupManagerName").item(0).getTextContent();
-                            CostumerGroupDetails costumerGroupDetails=new CostumerGroupDetails(groupManagerName);
+                            CustomerGroupDetails costumerGroupDetails=new CustomerGroupDetails(groupManagerName);
                             management.addCostumerGroup(costumerGroupDetails);
                             NodeList customersList=eElement.getElementsByTagName("Customer");
                             for(int i=0;i<customersList.getLength();i++){
@@ -72,7 +72,7 @@ public class Driver {
                                 String vandalism = element.getElementsByTagName("Vandalism").item(0).getTextContent();
                                 int minimumDamage  = Integer.parseInt(element.getElementsByTagName("MinimumDamage").item(0).getTextContent());
                                 int maximumDamage  = Integer.parseInt(element.getElementsByTagName("MaximumDamage").item(0).getTextContent());
-                                Costumer costumer=new Costumer(customerName, vandalism, minimumDamage, maximumDamage);
+                                Customer costumer=new Customer(customerName, vandalism, minimumDamage, maximumDamage);
                                 costumerGroupDetails.addCostumer(costumer);
                             }
                             NodeList rentalRequestList=eElement.getElementsByTagName("Request");
@@ -176,6 +176,9 @@ public class Driver {
         parsingAssets(doc1, assets);
         parsingCostumersGroup(doc2, management);
         parsingAssetContentsRepairDetails(doc3, management);
+        
+        
+        
         
     }
 }

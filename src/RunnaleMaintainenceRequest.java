@@ -12,6 +12,7 @@ public class RunnaleMaintainenceRequest implements Runnable{
     //collection of repair material inormation
     Asset _asset;
     Warehouse _warehouse;
+    
     @Override
     public void run() {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

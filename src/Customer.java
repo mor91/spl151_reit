@@ -7,7 +7,7 @@
  *
  * @author chen
  */
-public class Costumer {
+public class Customer {
     String _name;
     String _vandalismType;
     int _minimumDamage;
@@ -19,7 +19,7 @@ public class Costumer {
         else return 0;
     }
 
-    public Costumer(String _name, String _vandalismType, int _minimumDamage, int _maximumDamage) {
+    public Customer(String _name, String _vandalismType, int _minimumDamage, int _maximumDamage) {
         this._name = _name;
         this._vandalismType = _vandalismType;
         this._minimumDamage = _minimumDamage;
