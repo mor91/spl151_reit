@@ -9,5 +9,12 @@
  */
 public class DamageReport {
     Asset _asset;
-    int _damagePercentage;
+    double _damagePercentage;
+
+    public DamageReport(Asset _asset, double _damagePercentage) {
+        this._asset = _asset;
+        this._damagePercentage = _damagePercentage;
+    }
+    
+    
 }

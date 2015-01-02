@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 public class RunnableCostumerGroupManager implements Runnable{
     CustomerGroupDetails _costumerGroupDetails;
     private final BlockingQueue<RentalRequest> rentalRequestsPool;
+    private DamageReport damageReport;
 
     public RunnableCostumerGroupManager(CustomerGroupDetails _costumerGroupDetails, BlockingQueue<RentalRequest> rentalRequestsPool) {
         this._costumerGroupDetails = _costumerGroupDetails;
@@ -53,10 +54,11 @@ public class RunnableCostumerGroupManager implements Runnable{
                     Logger.getLogger(RunnableCostumerGroupManager.class.getName()).log(Level.SEVERE, null, ex1);
                 }
             }
-            DamageReport damageReport=new DamageReport();
+            damageReport=new DamageReport(rentalRequest.getValue()._asset, totalDamage);
         } 
         
     }
+
     
     public Map<String, RentalRequest> customerGroupRentalRequest(){
         return _costumerGroupDetails._rentalRequestMap; 
