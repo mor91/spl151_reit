@@ -1,3 +1,6 @@
+
+import java.util.concurrent.CountDownLatch;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -14,6 +17,7 @@ public class RentalRequest {
     int _durationOfStay;
     Asset _asset;
     String _requestStatus;
+    CountDownLatch countDownLatch; 
 
     public RentalRequest(String _id, String _assetType, int _assetSize, int _durationOfStay) {
         this._id = _id;
@@ -21,6 +25,9 @@ public class RentalRequest {
         this._assetSize = _assetSize;
         this._durationOfStay = _durationOfStay;
         this._requestStatus ="INCOMPLETE";
+        this.countDownLatch=new CountDownLatch(1);
     }
-    
+    public CountDownLatch getCountDownLatch(){
+        return countDownLatch;
+    }
 }

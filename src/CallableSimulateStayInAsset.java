@@ -13,14 +13,17 @@ import java.util.concurrent.Callable;
  */
 public class CallableSimulateStayInAsset implements Callable{
     private Customer _customer;
+    RentalRequest currentRentalRequest;
 
-    public CallableSimulateStayInAsset(Customer _customer) {
+    public CallableSimulateStayInAsset(Customer _customer, RentalRequest currentRentalRequest) {
         //sleep(stayInAsset)
         this._customer = _customer;
+        this.currentRentalRequest=currentRentalRequest;
     }
     
     @Override
     public Object call() throws Exception {
+        Thread.sleep(this.currentRentalRequest._durationOfStay*2400);
         return this.damagePercentage();
     }
     private double damagePercentage(){
