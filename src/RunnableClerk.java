@@ -30,10 +30,11 @@ public class RunnableClerk implements Runnable{
            RentalRequest cuurentRentalRequest=_rentalRequestMap.get(_numberOfRentalRequests);
            _numberOfRentalRequests.getAndIncrement();
            //find suitale asset, when found change asset to Booked 
-           //cuurentRentalRequest._asset=asset;
+           cuurentRentalRequest._requestStatus="INPROGRESS";
            long distance =(long) _clarkDetails._location.calculateDistance(null);//calculate distance from asset location
            //this.sleep(distance*2000);
            totalTimeOfSleep+=distance;
+           //cuurentRentalRequest._asset=asset;
         }
     }
     

@@ -1,3 +1,6 @@
+
+import java.util.Map;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -20,4 +23,7 @@ public class RunnableCostumerGroupManager implements Runnable{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public Map<String, RentalRequest> customerGroupRentalRequest(){
+        return _costumerGroupDetails._rentalRequestMap; 
+    }
 }

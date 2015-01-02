@@ -9,7 +9,7 @@
  */
 public class Statistics {
     int _moneyGained;
-    //collection oof rental requests
+    //collection of rental requests
     //collection of repair tools
     //collection of repair materials
     

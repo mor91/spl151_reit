@@ -20,7 +20,7 @@ public class RentalRequest {
         this._assetType = _assetType;
         this._assetSize = _assetSize;
         this._durationOfStay = _durationOfStay;
-        //this._requestStatus =;
+        this._requestStatus ="INCOMPLETE";
     }
     
 }

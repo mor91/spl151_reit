@@ -13,7 +13,7 @@ public class AssetContent{
     double _repairCostMultiplier;
     RepairMaterialInformation _repairMaterialInformation;
     RepairToolInformation _repairToolInformation;
-    //collection of repair Material inormation
+   
     public double repairTime(){//calculate the time it takes the item to e repaired
         return (100-_health)*_repairCostMultiplier;
     } 

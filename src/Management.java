@@ -44,10 +44,12 @@ public class Management {
         repairMaterialInformationMap.put(contentName, repairMaterialInformation);
     }
     public void work(){
+        //get rental requests from RunnaleCustomerGroupManager
         CountDownLatch countDownLatch = new CountDownLatch(clerksMap.size());
         while(_numberOfRentalRequests>0){
-           for(Map.Entry<String, RunnableClerk> entry:clerksMap.entrySet()){
-               entry.getValue().run();
+           for(Map.Entry<String, RunnableClerk> clerk:clerksMap.entrySet()){
+               //Thread thread=new Thread(clerk.getValue());
+               clerk.getValue().run();
            } 
         }
 

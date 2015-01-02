@@ -16,6 +16,7 @@ public class RunnaleMaintainenceRequest implements Runnable{
     Map<String, RepairMaterialInformation> repairMaterialInformationMap=new TreeMap<>();//need to initial
     Asset _asset;
     Warehouse _warehouse;
+    Map<String , Integer> consumedMaterials=new TreeMap<>();
 
     public RunnaleMaintainenceRequest(Asset _asset, Warehouse _warehouse) {
         this._asset = _asset;
@@ -32,12 +33,18 @@ public class RunnaleMaintainenceRequest implements Runnable{
                             _warehouse.acquireTool(repairTool.getKey());
                     }
                     for(Map.Entry<String,Integer> repairMaterial:repairMaterialInformationMap.get(assetContent)._repairMaterialMap.entrySet()){
-                       for(int i=0;i<repairMaterial.getValue();i++)
+                       for(int i=0;i<repairMaterial.getValue();i++){
                             _warehouse.consumeMaterial(repairMaterial.getKey());
+                       }    
                     }
+                }    
+                //sleep(assetContent.getValue().repairTime())
+                for(Map.Entry<String,Integer> repairTool:repairToolInformationMap.get(assetContent)._repairToolMap.entrySet()){
+                    for(int i=0;i<repairTool.getValue();i++)
+                       _warehouse.releaseTool(repairTool.getKey());
                 }
-            }
-            //sleep(assetContent.getValue().repairTime())
+                assetContent.getValue()._health=100;
+            }   
         }
     }
     

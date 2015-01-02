@@ -1,5 +1,6 @@
 
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -13,10 +14,17 @@ import java.util.Map;
 public class Warehouse implements IWarehouse{
     Map<String, RepairTool> _repairTools;
     Map<String, RepairMaterial> _repairMaterials;
+    Semaphore toolSemaphore;
+    Semaphore materialShemaphore;
 
+    public Warehouse() {
+    }
+    
+    
     @Override
     public void acquireTool(String toolName) {
         _repairMaterials.get(toolName)._quantity--;
+        
     }
 
     @Override
@@ -35,4 +43,8 @@ public class Warehouse implements IWarehouse{
         _repairMaterials.put(repairMaterial._name, repairMaterial);
                 
     }
+     public void semaphorePermits(){
+         toolSemaphore=new Semaphore(_repairTools.size());
+         materialShemaphore=new Semaphore(_repairMaterials.size());
+     } 
 }
