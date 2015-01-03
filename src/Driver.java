@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -168,8 +169,10 @@ public class Driver {
                 }
                 int numberOfMaintenancePersons=Integer.parseInt(eElement2.getElementsByTagName("NumberOfMaintenancePersons").item(0).getTextContent());             
                 int totalNumberOfRentalRequests=Integer.parseInt(eElement2.getElementsByTagName("TotalNumberOfRentalRequests").item(0).getTextContent());
-                management.setNumberOfMaintenancePersons(numberOfMaintenancePersons);
-                management.setNumberOfRentalRequests(totalNumberOfRentalRequests);
+                AtomicInteger numberOfMaintenancePersonsA=new AtomicInteger(numberOfMaintenancePersons);
+                AtomicInteger totalNumberOfRentalRequestsA=new AtomicInteger(totalNumberOfRentalRequests);
+                management.setNumberOfMaintenancePersons(numberOfMaintenancePersonsA);
+                management.setNumberOfRentalRequests(totalNumberOfRentalRequestsA);
     }
     
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {

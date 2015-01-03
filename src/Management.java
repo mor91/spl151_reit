@@ -8,8 +8,13 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -28,16 +33,16 @@ public class Management {
     Map<String, RepairToolInformation> repairToolInformationMap=new TreeMap<>();
     Map<String, RepairMaterialInformation> repairMaterialInformationMap=new TreeMap<>();
     BlockingQueue<RentalRequest> rentalRequestsQueue;
-    CyclicBarrier cyclicBarrier;
+    CyclicBarrier cyclicBarrier = new CyclicBarrier(10);
     Statistics _statistics;
-    int numberOfRentalRequests;
-    int numberOfMaintainancePersons;
+    AtomicInteger numberOfRentalRequests ;
+    AtomicInteger numberOfMaintainancePersons;
 
-    public void setNumberOfRentalRequests(int numberOfRentalRequests) {
+    public void setNumberOfRentalRequests(AtomicInteger numberOfRentalRequests) {
         this.numberOfRentalRequests = numberOfRentalRequests;
     }
 
-    public void setNumberOfMaintenancePersons(int numberOfMaintainancePersons) {
+    public void setNumberOfMaintenancePersons(AtomicInteger numberOfMaintainancePersons) {
         this.numberOfMaintainancePersons = numberOfMaintainancePersons;
     }
     
@@ -46,10 +51,13 @@ public class Management {
         this._warehouse = _warehouse;
         this.rentalRequestsQueue=new LinkedBlockingQueue<>();
         this._statistics=new Statistics();
+        this.numberOfMaintainancePersons=new AtomicInteger(0);
+        this.numberOfRentalRequests=new AtomicInteger(0);
+        
     }
     
     public void addClerk(ClerkDetails clerkDetails){
-        RunnableClerk runnableClerk=new RunnableClerk(clerkDetails, cyclicBarrier ,rentalRequestsQueue, _assets, numberOfRentalRequests);
+        RunnableClerk runnableClerk=new RunnableClerk(clerkDetails ,rentalRequestsQueue, _assets, numberOfRentalRequests);
         clerksMap.put(clerkDetails._name, runnableClerk);
     } 
     public void addCostumerGroup(CustomerGroupDetails costumerGroupDetails){
@@ -64,16 +72,52 @@ public class Management {
     }
     public void work(){
         List<Thread> customerGroupThreads=new ArrayList<>();
+        List<Thread> maintainencePersons=new ArrayList<>();
+        
+        ExecutorService executorService=Executors.newFixedThreadPool(numberOfMaintainancePersons.get());
+        
         for (RunnableCostumerGroupManager costumerGroupManager : costumerGroupManagersList) {
             Thread thread=new Thread(costumerGroupManager);
             customerGroupThreads.add(thread);
         }
-        cyclicBarrier = new CyclicBarrier(clerksMap.size());
+        
         List<Thread> clerkThreads=new ArrayList<>();
+        
+        cyclicBarrier = new CyclicBarrier(clerksMap.size(),new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(16000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Management.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if (numberOfRentalRequests.get() > 0) {
+                    while (_assets._damagedAssets.size()>0) {                        
+                        try {
+                            Asset asset =_assets._damagedAssets.take();
+                            executorService.execute(new RunnaleMaintainenceRequest(asset, _warehouse, _statistics));
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                            Logger.getLogger(Management.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    for (Thread clerkThread : clerkThreads) {
+                        if (clerkThread.isAlive()) {
+                            System.out.println("sdgsdgsd");
+                        }
+                        clerkThread.start();
+                    }
+                }
+            }
+        });
+        
         for(Map.Entry<String, RunnableClerk> clerk:clerksMap.entrySet()){
+            clerk.getValue().setCyclicBarier(cyclicBarrier);
             Thread thread=new Thread(clerk.getValue());
-            clerkThreads.add(thread);        
-        } 
+            clerkThreads.add(thread); 
+            
+        }
         
         for (Thread clerkThread : clerkThreads) {
             clerkThread.start();
@@ -81,9 +125,7 @@ public class Management {
         for (Thread customerGroupThread : customerGroupThreads) {
             customerGroupThread.start();
         }
-        while(!_assets._damagedAssets.isEmpty()){
-            RunnaleMaintainenceRequest runnaleMaintainenceRequest=new RunnaleMaintainenceRequest(_assets._damagedAssets.poll(), _warehouse,_statistics);
-        }
+        
         _statistics.outPut();
     }
 }

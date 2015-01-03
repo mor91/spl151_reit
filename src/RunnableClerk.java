@@ -2,6 +2,7 @@
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -27,15 +28,17 @@ public class RunnableClerk implements Runnable{
     Assets _assets;
 
     
-    public RunnableClerk(ClerkDetails _clarkDetails, CyclicBarrier cyclicBarrier, BlockingQueue rentalRequestQueue, Assets assets, int numberOfRentalRequests ) {
+    public RunnableClerk(ClerkDetails _clarkDetails, BlockingQueue<RentalRequest> rentalRequestQueue, Assets assets, AtomicInteger numberOfRentalRequests ) {
         this._clarkDetails = _clarkDetails;
-        this.cyclicBarrier = cyclicBarrier;
         this._rentalRequestQueue = rentalRequestQueue;
         this._assets=assets;
-        _numberOfRentalRequests=new AtomicInteger(numberOfRentalRequests);
+        this._numberOfRentalRequests=numberOfRentalRequests;
         
     }
-
+    
+    public void setCyclicBarier(CyclicBarrier cyclicBarrier){
+        this.cyclicBarrier=cyclicBarrier;
+    }
     
     @Override
     public void run() {
@@ -53,6 +56,7 @@ public class RunnableClerk implements Runnable{
                         asset.getValue()._status=AssetStatus.Booked;
                     } catch (InterruptedException ex) {
                         Logger.getLogger(RunnableClerk.class.getName()).log(Level.SEVERE, null, ex);
+                        ex.printStackTrace();
                     }      
                 }
                     
@@ -63,9 +67,20 @@ public class RunnableClerk implements Runnable{
                 Thread.sleep(distance*2000) ;
             } catch (InterruptedException ex) {
                 Logger.getLogger(RunnableClerk.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
             totalTimeOfSleep+=distance;
             cuurentRentalRequest.getCountDownLatch().countDown();
+            
+        }
+        try {
+            cyclicBarrier.await();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(RunnableClerk.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+        } catch (BrokenBarrierException ex) {
+            Logger.getLogger(RunnableClerk.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
     
