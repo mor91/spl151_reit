@@ -70,9 +70,15 @@ public class Driver {
                                 Element element=(Element) costumerNode;
                                 String customerName= element.getElementsByTagName("Name").item(0).getTextContent();
                                 String vandalism = element.getElementsByTagName("Vandalism").item(0).getTextContent();
+                                VandalismType vandalismType;
+                                if(vandalism.compareTo("Fixed")==0)
+                                    vandalismType=VandalismType.Fixed;
+                                else if(vandalism.compareTo("None")==0)
+                                    vandalismType=VandalismType.None;
+                                else vandalismType=VandalismType.Arbitrary;
                                 int minimumDamage  = Integer.parseInt(element.getElementsByTagName("MinimumDamage").item(0).getTextContent());
                                 int maximumDamage  = Integer.parseInt(element.getElementsByTagName("MaximumDamage").item(0).getTextContent());
-                                Customer costumer=new Customer(customerName, vandalism, minimumDamage, maximumDamage);
+                                Customer costumer=new Customer(customerName, vandalismType, minimumDamage, maximumDamage);
                                 costumerGroupDetails.addCostumer(costumer);
                             }
                             NodeList rentalRequestList=eElement.getElementsByTagName("Request");

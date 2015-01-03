@@ -35,14 +35,16 @@ public class RunnableCostumerGroupManager implements Runnable{
         for (Map.Entry<String, RentalRequest> rentalRequest : _costumerGroupDetails._rentalRequestMap.entrySet()){
             rentalRequestsPool.add(rentalRequest.getValue());
             try {
-                rentalRequest.getValue().countDownLatch.await();
+                rentalRequest.getValue().rentalRequestCountDownLatch.await();
             } catch (InterruptedException ex) {
                 Logger.getLogger(RunnableCostumerGroupManager.class.getName()).log(Level.SEVERE, null, ex);
             }
             Executor ex= Executors.newCachedThreadPool();
             CompletionService<Double> cs = new ExecutorCompletionService<Double>(ex);   
             double totalDamage=0;
-            for (Map.Entry<String ,Customer> customer : _costumerGroupDetails._customersMap.entrySet()) {
+            rentalRequest.getValue()._asset._status=AssetStatus.Occupied;
+            rentalRequest.getValue()._requestStatus=RentalRequestStatus.InProgress;
+            for (Map.Entry<String ,Customer> customer : _costumerGroupDetails._customersMap.entrySet()) {   
                 cs.submit(new CallableSimulateStayInAsset(customer.getValue(),rentalRequest.getValue()));
                 try {
                     try {
@@ -53,7 +55,10 @@ public class RunnableCostumerGroupManager implements Runnable{
                 } catch (InterruptedException ex1) {
                     Logger.getLogger(RunnableCostumerGroupManager.class.getName()).log(Level.SEVERE, null, ex1);
                 }
+                
             }
+            rentalRequest.getValue()._asset._status=AssetStatus.UnAvailale;
+            rentalRequest.getValue()._requestStatus=RentalRequestStatus.Complete;
             damageReport=new DamageReport(rentalRequest.getValue()._asset, totalDamage);
         } 
         

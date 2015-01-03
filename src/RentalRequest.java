@@ -16,18 +16,18 @@ public class RentalRequest {
     int _assetSize;
     int _durationOfStay;
     Asset _asset;
-    String _requestStatus;
-    CountDownLatch countDownLatch; 
+    RentalRequestStatus _requestStatus;
+    CountDownLatch rentalRequestCountDownLatch; 
 
     public RentalRequest(String _id, String _assetType, int _assetSize, int _durationOfStay) {
         this._id = _id;
         this._assetType = _assetType;
         this._assetSize = _assetSize;
         this._durationOfStay = _durationOfStay;
-        this._requestStatus ="INCOMPLETE";
-        this.countDownLatch=new CountDownLatch(1);
+        this._requestStatus=RentalRequestStatus.Incomplete;
+        this.rentalRequestCountDownLatch=new CountDownLatch(1);
     }
     public CountDownLatch getCountDownLatch(){
-        return countDownLatch;
+        return rentalRequestCountDownLatch;
     }
 }

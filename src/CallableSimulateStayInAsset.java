@@ -16,7 +16,6 @@ public class CallableSimulateStayInAsset implements Callable{
     RentalRequest currentRentalRequest;
 
     public CallableSimulateStayInAsset(Customer _customer, RentalRequest currentRentalRequest) {
-        //sleep(stayInAsset)
         this._customer = _customer;
         this.currentRentalRequest=currentRentalRequest;
     }
@@ -28,14 +27,14 @@ public class CallableSimulateStayInAsset implements Callable{
     }
     private double damagePercentage(){
         double damageaPer=0;
-        if(_customer._vandalismType.compareTo("ARBITRARY")==0){
+        if(_customer._vandalismType==VandalismType.Arbitrary){
             Random rand =new Random();
             damageaPer = rand.nextInt((_customer._maximumDamage - _customer._minimumDamage) + 1) + _customer._minimumDamage;
         }
-        if(_customer._vandalismType.compareTo("FIXED")==0){
+        if(_customer._vandalismType==VandalismType.Fixed){
             damageaPer=(_customer._maximumDamage+_customer._minimumDamage)/2;
         }
-        if(_customer._vandalismType.compareTo("NONE")==0){
+    if(_customer._vandalismType==VandalismType.None){
             damageaPer=0.5;
         }
         return damageaPer;

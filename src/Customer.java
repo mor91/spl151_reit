@@ -9,22 +9,15 @@
  */
 public class Customer {
     String _name;
-    String _vandalismType;
+    VandalismType _vandalismType;
     int _minimumDamage;
     int _maximumDamage;
     
     
-    public Customer(String _name, String _vandalismType, int _minimumDamage, int _maximumDamage) {
+    public Customer(String _name, VandalismType _vandalismType, int _minimumDamage, int _maximumDamage) {
         this._name = _name;
         this._vandalismType = _vandalismType;
         this._minimumDamage = _minimumDamage;
         this._maximumDamage = _maximumDamage;
     }
-    public int damageapercentage(){
-        if(this._vandalismType.compareTo("FIXED")==0){
-            return _maximumDamage+_minimumDamage/2;
-        }
-        else return 0;
-    }
-  
 }
