@@ -1,4 +1,5 @@
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 
@@ -18,6 +19,8 @@ public class Warehouse implements IWarehouse{
     Semaphore materialShemaphore;
 
     public Warehouse() {
+        _repairMaterials=new HashMap<>();
+        _repairTools=new HashMap<>();
     }
     
     

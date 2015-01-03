@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -15,7 +16,8 @@ public class Assets{
     BlockingQueue<Asset> _damagedAssets;
 
     public Assets() {
-    
+        _assets=new HashMap<>();
+        _damagedAssets=new LinkedBlockingQueue<>();
     }
     
 
@@ -23,8 +25,12 @@ public class Assets{
         this._assets = _assets;
         this._damagedAssets=new LinkedBlockingQueue<>();
     }
-
-    public void addAsset(Asset asset) {
+    
+    public void addAsset(Asset asset){
+        _assets.put(asset._name, asset);
+    }
+    
+    public void addDamagedAsset(Asset asset) {
         _damagedAssets.add(asset);
     }
 

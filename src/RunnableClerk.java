@@ -32,6 +32,7 @@ public class RunnableClerk implements Runnable{
         this.cyclicBarrier = cyclicBarrier;
         this._rentalRequestQueue = rentalRequestQueue;
         this._assets=assets;
+        _numberOfRentalRequests=new AtomicInteger(0);
         
     }
 

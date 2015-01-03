@@ -43,6 +43,32 @@ public class Statistics {
         else _consumedRepairMaterial.put(repairMaterialName, quantity);
     
     } 
-    
+    public void outPut(){
+        StringBuilder stringBuilderMoneyGaind=new StringBuilder();
+        stringBuilderMoneyGaind.append("Money gaind: ");
+        stringBuilderMoneyGaind.append(_moneyGained);
+        System.out.println(stringBuilderMoneyGaind.toString());
+        System.out.println("Rental requests: ");
+        for (RentalRequest rentalRequest : _rentalRequests) {
+            System.out.println(rentalRequest.toString());
+            
+        }
+        for (Map.Entry<String, Integer> tool : _usedRepairToolMap.entrySet()) {
+            StringBuilder toolStringBuilder=new StringBuilder();
+            toolStringBuilder.append(tool.getKey());
+            toolStringBuilder.append(": ");
+            toolStringBuilder.append(tool.getValue());
+            System.out.println(toolStringBuilder.toString());
+        }
+        for (Map.Entry<String, Integer> material : _consumedRepairMaterial.entrySet()) {
+            StringBuilder materialStringBuilder=new StringBuilder();
+            materialStringBuilder.append(material.getKey());
+            materialStringBuilder.append(": ");
+            materialStringBuilder.append(material.getValue());
+            System.out.println(materialStringBuilder.toString());
+         
+        }
+                
+    }
     
 }

@@ -30,4 +30,11 @@ public class RentalRequest {
     public CountDownLatch getCountDownLatch(){
         return rentalRequestCountDownLatch;
     }
+    public String toString(){
+        StringBuilder rentalRequestStringBuilder=new StringBuilder();
+        rentalRequestStringBuilder.append(_id);
+        rentalRequestStringBuilder.append(": ");
+        rentalRequestStringBuilder.append(_requestStatus.toString());
+        return(rentalRequestStringBuilder.toString());
+    }
 }

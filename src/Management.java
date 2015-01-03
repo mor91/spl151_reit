@@ -73,5 +73,6 @@ public class Management {
         while(!_assets._damagedAssets.isEmpty()){
             RunnaleMaintainenceRequest runnaleMaintainenceRequest=new RunnaleMaintainenceRequest(_assets._damagedAssets.poll(), _warehouse,_statistics);
         }
+        _statistics.outPut();
     }
 }

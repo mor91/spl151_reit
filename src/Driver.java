@@ -34,6 +34,7 @@ public class Driver {
                             Location location=new Location(Integer.parseInt(locationNode.getAttributes().getNamedItem("x").getNodeValue()),Integer.parseInt(locationNode.getAttributes().getNamedItem("y").getNodeValue()));
                             int costPerNight=Integer.parseInt(eElement.getElementsByTagName("CostPerNight").item(0).getTextContent());
                             Asset asset=new Asset(assetName, type, location, costPerNight, size);
+                            assets.addAsset(asset);
                             NodeList assetContentsList=eElement.getElementsByTagName("AssetContent");
                             for(int i=0;i<assetContentsList.getLength();i++){
                                 Node contentsNode=assetContentsList.item(i);
@@ -47,7 +48,6 @@ public class Driver {
                                 else assetContent=new AssetContent(assetContentName, repairMultiplier);
                                 asset.addAssetContent(assetContent);
                             }
-                            assets.addAsset(asset);//semaphore
                             
                     }
 
@@ -138,7 +138,10 @@ public class Driver {
                     String toolName = element.getElementsByTagName("name").item(0).getTextContent();
                     int quantity =Integer.parseInt( element.getElementsByTagName("quantity").item(0).getTextContent());
                     RepairTool repairTool=new RepairTool(toolName, quantity);
-//                    warehouse.addRepairTool(repairTool); 
+                    if(toolName==null){
+                        System.out.println("dfd");
+                    }
+                    warehouse.addRepairTool(repairTool); 
                 }
                 NodeList materialList=eElement1.getElementsByTagName("Material");
                 for(int i=0;i<materialList.getLength();i++){
@@ -147,7 +150,7 @@ public class Driver {
                     String materialName = element.getElementsByTagName("name").item(0).getTextContent();
                     int quantity = Integer.parseInt(element.getElementsByTagName("quantity").item(0).getTextContent());
                     RepairMaterial repairMaterial=new RepairMaterial(materialName, quantity);
- //                   warehouse.addRepairMaterial(repairMaterial);
+                    warehouse.addRepairMaterial(repairMaterial);
                 }
                 
             
@@ -183,7 +186,7 @@ public class Driver {
         parsingCostumersGroup(doc2, management);
         parsingAssetContentsRepairDetails(doc3, management);
         warehouse.semaphorePermits();
-        
+        management.work();
         
         
     }

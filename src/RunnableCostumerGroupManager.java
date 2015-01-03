@@ -65,7 +65,7 @@ public class RunnableCostumerGroupManager implements Runnable{
             rentalRequest.getValue()._asset._status=AssetStatus.UnAvailale;
             rentalRequest.getValue()._requestStatus=RentalRequestStatus.Complete;
             damageReport=new DamageReport(rentalRequest.getValue()._asset, totalDamage);
-            this._assets.addAsset(rentalRequest.getValue()._asset);
+            this._assets.addDamagedAsset(rentalRequest.getValue()._asset);
             int moneyGined=rentalRequest.getValue()._durationOfStay*rentalRequest.getValue()._asset._costPerNight*_costumerGroupDetails.numOfMembers;
             _statistics.addMoneyGained(moneyGined);
         } 
