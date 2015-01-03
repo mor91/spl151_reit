@@ -29,6 +29,7 @@ public class Management {
     Map<String, RepairMaterialInformation> repairMaterialInformationMap=new TreeMap<>();
     BlockingQueue<RentalRequest> rentalRequestsQueue;
     CyclicBarrier cyclicBarrier;
+    Statistics _statistics;
     
     public Management( Warehouse _warehouse,Assets _assets) {
         this._assets = _assets;
@@ -41,7 +42,7 @@ public class Management {
         clerksMap.put(clerkDetails._name, runnableClerk);
     } 
     public void addCostumerGroup(CustomerGroupDetails costumerGroupDetails){
-        RunnableCostumerGroupManager runnableCostumerGroupManager=new RunnableCostumerGroupManager(costumerGroupDetails, rentalRequestsQueue);
+        RunnableCostumerGroupManager runnableCostumerGroupManager=new RunnableCostumerGroupManager(costumerGroupDetails, rentalRequestsQueue, _assets,_statistics);
         costumerGroupManagersList.add(runnableCostumerGroupManager);
     }
     public void addItemRepairTool(String contentName,RepairToolInformation repairToolInformation){
@@ -68,6 +69,9 @@ public class Management {
         }
         for (Thread customerGroupThread : customerGroupThreads) {
             customerGroupThread.start();
+        }
+        while(!_assets._damagedAssets.isEmpty()){
+            RunnaleMaintainenceRequest runnaleMaintainenceRequest=new RunnaleMaintainenceRequest(_assets._damagedAssets.poll(), _warehouse,_statistics);
         }
     }
 }

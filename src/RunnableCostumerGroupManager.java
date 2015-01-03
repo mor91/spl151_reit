@@ -23,10 +23,14 @@ public class RunnableCostumerGroupManager implements Runnable{
     CustomerGroupDetails _costumerGroupDetails;
     private final BlockingQueue<RentalRequest> rentalRequestsPool;
     private DamageReport damageReport;
+    Assets _assets;
+    Statistics _statistics;
 
-    public RunnableCostumerGroupManager(CustomerGroupDetails _costumerGroupDetails, BlockingQueue<RentalRequest> rentalRequestsPool) {
+    public RunnableCostumerGroupManager(CustomerGroupDetails _costumerGroupDetails, BlockingQueue<RentalRequest> rentalRequestsPool, Assets assets, Statistics statistics) {
         this._costumerGroupDetails = _costumerGroupDetails;
         this.rentalRequestsPool = rentalRequestsPool;
+        this._assets=assets;
+        this._statistics=statistics;
     }
     
     
@@ -34,6 +38,7 @@ public class RunnableCostumerGroupManager implements Runnable{
     public void run() {
         for (Map.Entry<String, RentalRequest> rentalRequest : _costumerGroupDetails._rentalRequestMap.entrySet()){
             rentalRequestsPool.add(rentalRequest.getValue());
+            _statistics.addRentalRequest(rentalRequest.getValue());
             try {
                 rentalRequest.getValue().rentalRequestCountDownLatch.await();
             } catch (InterruptedException ex) {
@@ -60,6 +65,9 @@ public class RunnableCostumerGroupManager implements Runnable{
             rentalRequest.getValue()._asset._status=AssetStatus.UnAvailale;
             rentalRequest.getValue()._requestStatus=RentalRequestStatus.Complete;
             damageReport=new DamageReport(rentalRequest.getValue()._asset, totalDamage);
+            this._assets.addAsset(rentalRequest.getValue()._asset);
+            int moneyGined=rentalRequest.getValue()._durationOfStay*rentalRequest.getValue()._asset._costPerNight*_costumerGroupDetails.numOfMembers;
+            _statistics.addMoneyGained(moneyGined);
         } 
         
     }

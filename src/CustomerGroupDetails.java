@@ -15,13 +15,16 @@ public class CustomerGroupDetails {
     Map<String, RentalRequest> _rentalRequestMap=new TreeMap<>();
     Map<String,Customer> _customersMap=new TreeMap<>();
     String _groupManagerName;
+    int numOfMembers;
 
     public CustomerGroupDetails(String _groupManagerName) {
         this._groupManagerName = _groupManagerName;
+        this.numOfMembers=0;
     }
     
     public void addCostumer(Customer costumer){
-        _customersMap.put(costumer._name, costumer);
+        this._customersMap.put(costumer._name, costumer);
+        this.numOfMembers+=1;
         
     }
     public void addRentalRequest(RentalRequest  rentalRequest){
