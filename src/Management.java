@@ -30,15 +30,26 @@ public class Management {
     BlockingQueue<RentalRequest> rentalRequestsQueue;
     CyclicBarrier cyclicBarrier;
     Statistics _statistics;
+    int numberOfRentalRequests;
+    int numberOfMaintainancePersons;
+
+    public void setNumberOfRentalRequests(int numberOfRentalRequests) {
+        this.numberOfRentalRequests = numberOfRentalRequests;
+    }
+
+    public void setNumberOfMaintenancePersons(int numberOfMaintainancePersons) {
+        this.numberOfMaintainancePersons = numberOfMaintainancePersons;
+    }
     
     public Management( Warehouse _warehouse,Assets _assets) {
         this._assets = _assets;
         this._warehouse = _warehouse;
         this.rentalRequestsQueue=new LinkedBlockingQueue<>();
+        this._statistics=new Statistics();
     }
     
     public void addClerk(ClerkDetails clerkDetails){
-        RunnableClerk runnableClerk=new RunnableClerk(clerkDetails, cyclicBarrier ,rentalRequestsQueue, _assets);
+        RunnableClerk runnableClerk=new RunnableClerk(clerkDetails, cyclicBarrier ,rentalRequestsQueue, _assets, numberOfRentalRequests);
         clerksMap.put(clerkDetails._name, runnableClerk);
     } 
     public void addCostumerGroup(CustomerGroupDetails costumerGroupDetails){

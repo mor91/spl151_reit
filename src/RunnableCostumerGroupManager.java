@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class RunnableCostumerGroupManager implements Runnable{
     CustomerGroupDetails _costumerGroupDetails;
-    private final BlockingQueue<RentalRequest> rentalRequestsPool;
+    private BlockingQueue<RentalRequest> rentalRequestsPool;
     private DamageReport damageReport;
     Assets _assets;
     Statistics _statistics;
@@ -31,6 +31,7 @@ public class RunnableCostumerGroupManager implements Runnable{
         this.rentalRequestsPool = rentalRequestsPool;
         this._assets=assets;
         this._statistics=statistics;
+        
     }
     
     

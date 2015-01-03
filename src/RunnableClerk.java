@@ -27,12 +27,12 @@ public class RunnableClerk implements Runnable{
     Assets _assets;
 
     
-    public RunnableClerk(ClerkDetails _clarkDetails, CyclicBarrier cyclicBarrier, BlockingQueue rentalRequestQueue, Assets assets ) {
+    public RunnableClerk(ClerkDetails _clarkDetails, CyclicBarrier cyclicBarrier, BlockingQueue rentalRequestQueue, Assets assets, int numberOfRentalRequests ) {
         this._clarkDetails = _clarkDetails;
         this.cyclicBarrier = cyclicBarrier;
         this._rentalRequestQueue = rentalRequestQueue;
         this._assets=assets;
-        _numberOfRentalRequests=new AtomicInteger(0);
+        _numberOfRentalRequests=new AtomicInteger(numberOfRentalRequests);
         
     }
 

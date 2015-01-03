@@ -12,14 +12,16 @@ import java.util.TreeMap;
  * @author chen
  */
 public class CustomerGroupDetails {
-    Map<String, RentalRequest> _rentalRequestMap=new TreeMap<>();
-    Map<String,Customer> _customersMap=new TreeMap<>();
+    Map<String, RentalRequest> _rentalRequestMap;
+    Map<String,Customer> _customersMap;
     String _groupManagerName;
     int numOfMembers;
 
     public CustomerGroupDetails(String _groupManagerName) {
         this._groupManagerName = _groupManagerName;
         this.numOfMembers=0;
+        this._customersMap=new TreeMap<>();
+        this._rentalRequestMap=new TreeMap<>();
     }
     
     public void addCostumer(Customer costumer){

@@ -168,7 +168,8 @@ public class Driver {
                 }
                 int numberOfMaintenancePersons=Integer.parseInt(eElement2.getElementsByTagName("NumberOfMaintenancePersons").item(0).getTextContent());             
                 int totalNumberOfRentalRequests=Integer.parseInt(eElement2.getElementsByTagName("TotalNumberOfRentalRequests").item(0).getTextContent());
-                
+                management.setNumberOfMaintenancePersons(numberOfMaintenancePersons);
+                management.setNumberOfRentalRequests(totalNumberOfRentalRequests);
     }
     
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
