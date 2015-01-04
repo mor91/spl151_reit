@@ -189,8 +189,8 @@ public class Driver {
         parsingAssets(doc1, assets);
         parsingCostumersGroup(doc2, management);
         parsingAssetContentsRepairDetails(doc3, management);
-        warehouse.semaphorePermits();
         management.work();
+        management.printStatistiscs();
         
         
     }

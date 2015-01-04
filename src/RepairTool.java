@@ -1,3 +1,6 @@
+
+import java.util.concurrent.Semaphore;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,10 +13,12 @@
 public class RepairTool {
     String _name;
     int _quantity;
+    Semaphore toolSemaphore;
 
     public RepairTool(String _name, int _quantity) {
         this._name = _name;
         this._quantity = _quantity;
+        toolSemaphore=new Semaphore(_quantity);
     }
 
     public String getName() {
@@ -30,6 +35,12 @@ public class RepairTool {
 
     public void setQuantity(int _quantity) {
         this._quantity = _quantity;
+    }
+    public void acquireTool() throws InterruptedException{
+        toolSemaphore.acquire();
+    }
+    public void releaseTool(){
+        toolSemaphore.release();
     }
     
 }

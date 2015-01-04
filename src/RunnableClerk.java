@@ -62,6 +62,7 @@ public class RunnableClerk implements Runnable{
                     
             }
             cuurentRentalRequest._requestStatus=RentalRequestStatus.Fulfilled;
+            _numberOfRentalRequests.decrementAndGet();
             long distance =(long) _clarkDetails._location.calculateDistance(cuurentRentalRequest._asset._location);//calculate distance from asset location
             try {
                 Thread.sleep(distance*2000) ;
@@ -71,6 +72,7 @@ public class RunnableClerk implements Runnable{
             }
             totalTimeOfSleep+=distance;
             cuurentRentalRequest.getCountDownLatch().countDown();
+            
             
         }
         try {

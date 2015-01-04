@@ -74,7 +74,6 @@ public class Management {
         List<Thread> customerGroupThreads=new ArrayList<>();
         List<Thread> maintainencePersons=new ArrayList<>();
         
-        ExecutorService executorService=Executors.newFixedThreadPool(numberOfMaintainancePersons.get());
         
         for (RunnableCostumerGroupManager costumerGroupManager : costumerGroupManagersList) {
             Thread thread=new Thread(costumerGroupManager);
@@ -83,6 +82,28 @@ public class Management {
         
         List<Thread> clerkThreads=new ArrayList<>();
         
+        
+       this.clerkWork(clerkThreads);
+        
+        
+        for(Map.Entry<String, RunnableClerk> clerk:clerksMap.entrySet()){
+            clerk.getValue().setCyclicBarier(cyclicBarrier);
+            Thread thread=new Thread(clerk.getValue());
+            clerkThreads.add(thread); 
+            
+        }
+        
+        for (Thread clerkThread : clerkThreads) {
+            clerkThread.start();
+        }
+        for (Thread customerGroupThread : customerGroupThreads) {
+            customerGroupThread.start();
+        }
+
+    }
+    public void clerkWork(List<Thread> clerkThreads){
+        ExecutorService executorService=Executors.newFixedThreadPool(numberOfMaintainancePersons.get());
+
         cyclicBarrier = new CyclicBarrier(clerksMap.size(),new Runnable() {
 
             @Override
@@ -102,30 +123,20 @@ public class Management {
                             Logger.getLogger(Management.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                    for (Thread clerkThread : clerkThreads) {
+                     
+                   
+                }
+            }
+            
+        });
+         for (Thread clerkThread : clerkThreads) {
                         if (clerkThread.isAlive()) {
                             System.out.println("sdgsdgsd");
                         }
                         clerkThread.start();
                     }
-                }
-            }
-        });
-        
-        for(Map.Entry<String, RunnableClerk> clerk:clerksMap.entrySet()){
-            clerk.getValue().setCyclicBarier(cyclicBarrier);
-            Thread thread=new Thread(clerk.getValue());
-            clerkThreads.add(thread); 
-            
-        }
-        
-        for (Thread clerkThread : clerkThreads) {
-            clerkThread.start();
-        }
-        for (Thread customerGroupThread : customerGroupThreads) {
-            customerGroupThread.start();
-        }
-        
+    }
+    public void printStatistiscs(){
         _statistics.outPut();
     }
 }
