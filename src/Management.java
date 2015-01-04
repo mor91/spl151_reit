@@ -81,7 +81,7 @@ public class Management {
         }
         
         List<Thread> clerkThreads=new ArrayList<>();
-        ExecutorService executorService=Executors.newFixedThreadPool(numberOfMaintainancePersons.get());
+        final ExecutorService executorService=Executors.newFixedThreadPool(numberOfMaintainancePersons.get());
 
         cyclicBarrier = new CyclicBarrier(clerksMap.size(),new Runnable() {
 
