@@ -58,6 +58,7 @@ public class RunnaleMaintainenceRequest implements Runnable{
             }   
         }
         this._asset._status=AssetStatus.Available;
+        this._asset.assetCountDownLatch.countDown();
 
     }
     

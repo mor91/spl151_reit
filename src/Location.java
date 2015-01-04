@@ -25,6 +25,6 @@ public class Location {
         return _y;
     }
     public double calculateDistance(Location other){//caiculate the distance between two locations 
-        return Math.sqrt((this.getX()-other.getX())^2+(this.getY()-other.getY())^2);
+        return Math.sqrt((Math.pow(Math.abs(this.getX()-other.getX()),2))+(Math.pow(Math.abs(this.getY()-other.getY()),2)));
     }
 }

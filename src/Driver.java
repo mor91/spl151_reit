@@ -190,7 +190,7 @@ public class Driver {
         parsingCostumersGroup(doc2, management);
         parsingAssetContentsRepairDetails(doc3, management);
         management.work();
-        management.printStatistiscs();
+        
         
         
     }

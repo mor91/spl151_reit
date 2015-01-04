@@ -33,17 +33,17 @@ public class Management {
     Map<String, RepairToolInformation> repairToolInformationMap=new TreeMap<>();
     Map<String, RepairMaterialInformation> repairMaterialInformationMap=new TreeMap<>();
     BlockingQueue<RentalRequest> rentalRequestsQueue;
-    CyclicBarrier cyclicBarrier = new CyclicBarrier(10);
+    CyclicBarrier cyclicBarrier;
     Statistics _statistics;
     AtomicInteger numberOfRentalRequests ;
     AtomicInteger numberOfMaintainancePersons;
 
     public void setNumberOfRentalRequests(AtomicInteger numberOfRentalRequests) {
-        this.numberOfRentalRequests = numberOfRentalRequests;
+        this.numberOfRentalRequests.set(numberOfRentalRequests.get());
     }
 
     public void setNumberOfMaintenancePersons(AtomicInteger numberOfMaintainancePersons) {
-        this.numberOfMaintainancePersons = numberOfMaintainancePersons;
+        this.numberOfMaintainancePersons.set(numberOfMaintainancePersons.get());
     }
     
     public Management( Warehouse _warehouse,Assets _assets) {
@@ -81,11 +81,36 @@ public class Management {
         }
         
         List<Thread> clerkThreads=new ArrayList<>();
-        
-        
-       this.clerkWork(clerkThreads);
-        
-        
+        ExecutorService executorService=Executors.newFixedThreadPool(numberOfMaintainancePersons.get());
+
+        cyclicBarrier = new CyclicBarrier(clerksMap.size(),new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    System.out.println("end shift");
+                    Thread.sleep(16000);
+                    System.out.println("start shift");
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Management.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace();
+                }
+                if (numberOfRentalRequests.get() > 0) {
+                    while (_assets._damagedAssets.size()>0) {                        
+                        try {
+                            Asset asset =_assets._damagedAssets.take();
+                            executorService.execute(new RunnaleMaintainenceRequest(asset, _warehouse, _statistics));
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                            Logger.getLogger(Management.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                 
+                }
+                else printStatistiscs();
+            }
+            
+        });
         for(Map.Entry<String, RunnableClerk> clerk:clerksMap.entrySet()){
             clerk.getValue().setCyclicBarier(cyclicBarrier);
             Thread thread=new Thread(clerk.getValue());
@@ -99,43 +124,10 @@ public class Management {
         for (Thread customerGroupThread : customerGroupThreads) {
             customerGroupThread.start();
         }
+        
 
     }
-    public void clerkWork(List<Thread> clerkThreads){
-        ExecutorService executorService=Executors.newFixedThreadPool(numberOfMaintainancePersons.get());
-
-        cyclicBarrier = new CyclicBarrier(clerksMap.size(),new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(16000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Management.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                if (numberOfRentalRequests.get() > 0) {
-                    while (_assets._damagedAssets.size()>0) {                        
-                        try {
-                            Asset asset =_assets._damagedAssets.take();
-                            executorService.execute(new RunnaleMaintainenceRequest(asset, _warehouse, _statistics));
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
-                            Logger.getLogger(Management.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                     
-                   
-                }
-            }
-            
-        });
-         for (Thread clerkThread : clerkThreads) {
-                        if (clerkThread.isAlive()) {
-                            System.out.println("sdgsdgsd");
-                        }
-                        clerkThread.start();
-                    }
-    }
+   
     public void printStatistiscs(){
         _statistics.outPut();
     }

@@ -7,6 +7,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,47 +43,52 @@ public class RunnableClerk implements Runnable{
     
     @Override
     public void run() {
-        
-        int totalTimeOfSleep=0;
-        while(totalTimeOfSleep<8 && _numberOfRentalRequests.doubleValue()>0){
-            RentalRequest cuurentRentalRequest=_rentalRequestQueue.poll();
-            _numberOfRentalRequests.getAndIncrement();
-            for (Map.Entry<String, Asset> asset : _assets._assets.entrySet()) {
-                if(asset.getValue()._type==cuurentRentalRequest._assetType && asset.getValue()._size>=cuurentRentalRequest._assetSize ){
-                    try {
-                        asset.getValue().getCountDownLatch().await();
-                        asset.getValue().setCountDownLatch();
-                        cuurentRentalRequest._asset=asset.getValue();
-                        asset.getValue()._status=AssetStatus.Booked;
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(RunnableClerk.class.getName()).log(Level.SEVERE, null, ex);
-                        ex.printStackTrace();
-                    }      
+        while(_numberOfRentalRequests.get()>0){
+            int totalTimeOfSleep=0;
+            while(totalTimeOfSleep<8 ){
+                RentalRequest cuurentRentalRequest=null;
+                try {
+                    cuurentRentalRequest = _rentalRequestQueue.poll(8-totalTimeOfSleep, TimeUnit.SECONDS);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(RunnableClerk.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                    
+                if(cuurentRentalRequest==null){
+                    break;
+                }
+                for (Map.Entry<String, Asset> asset : _assets._assets.entrySet()) {
+                    if(asset.getValue()._type.equalsIgnoreCase(cuurentRentalRequest._assetType) && asset.getValue()._size>=cuurentRentalRequest._assetSize && asset.getValue()._status==AssetStatus.Available){
+                            asset.getValue().setCountDownLatch();
+                            cuurentRentalRequest._asset=asset.getValue();
+                            asset.getValue()._status=AssetStatus.Booked;
+
+                        break;
+                    }
+
+                }
+                cuurentRentalRequest._requestStatus=RentalRequestStatus.Fulfilled;
+                _numberOfRentalRequests.decrementAndGet();
+                long distance =(long) _clarkDetails._location.calculateDistance(cuurentRentalRequest._asset._location);//calculate distance from asset location
+                try {
+                    Thread.sleep(distance*2000) ;
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(RunnableClerk.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace();
+                }
+                totalTimeOfSleep+=distance;
+                cuurentRentalRequest.getCountDownLatch().countDown();
+
+
             }
-            cuurentRentalRequest._requestStatus=RentalRequestStatus.Fulfilled;
-            _numberOfRentalRequests.decrementAndGet();
-            long distance =(long) _clarkDetails._location.calculateDistance(cuurentRentalRequest._asset._location);//calculate distance from asset location
             try {
-                Thread.sleep(distance*2000) ;
+                System.out.println("waiting: " + cyclicBarrier.getNumberWaiting());
+                cyclicBarrier.await();
             } catch (InterruptedException ex) {
                 Logger.getLogger(RunnableClerk.class.getName()).log(Level.SEVERE, null, ex);
                 ex.printStackTrace();
+            } catch (BrokenBarrierException ex) {
+                Logger.getLogger(RunnableClerk.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
-            totalTimeOfSleep+=distance;
-            cuurentRentalRequest.getCountDownLatch().countDown();
-            
-            
-        }
-        try {
-            cyclicBarrier.await();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(RunnableClerk.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
-        } catch (BrokenBarrierException ex) {
-            Logger.getLogger(RunnableClerk.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
         }
     }
     
