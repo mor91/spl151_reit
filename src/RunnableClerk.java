@@ -60,10 +60,16 @@ public class RunnableClerk implements Runnable{
                             asset.getValue().setCountDownLatch();
                             cuurentRentalRequest._asset=asset.getValue();
                             asset.getValue()._status=AssetStatus.Booked;
+                            System.out.println(asset.getValue()._name+ " Booked");
 
                         break;
                     }
 
+                }
+                if(cuurentRentalRequest._asset==null){
+                    _rentalRequestQueue.add(cuurentRentalRequest);
+                    System.out.println("no asset found");
+                    continue;
                 }
                 cuurentRentalRequest._requestStatus=RentalRequestStatus.Fulfilled;
                 _numberOfRentalRequests.decrementAndGet();

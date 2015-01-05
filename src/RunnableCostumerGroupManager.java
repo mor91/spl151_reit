@@ -7,6 +7,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,12 +26,15 @@ public class RunnableCostumerGroupManager implements Runnable{
     private DamageReport damageReport;
     Assets _assets;
     Statistics _statistics;
+    AtomicInteger numberOfCompleteRequests;
 
-    public RunnableCostumerGroupManager(CustomerGroupDetails _costumerGroupDetails, BlockingQueue<RentalRequest> rentalRequestsPool, Assets assets, Statistics statistics) {
+    public RunnableCostumerGroupManager(CustomerGroupDetails _costumerGroupDetails, BlockingQueue<RentalRequest> rentalRequestsPool, Assets assets, Statistics statistics, AtomicInteger numberOfCompleteRequests) {
         this._costumerGroupDetails = _costumerGroupDetails;
         this.rentalRequestsPool = rentalRequestsPool;
         this._assets=assets;
         this._statistics=statistics;
+        this.numberOfCompleteRequests=numberOfCompleteRequests;
+        
         
     }
     
@@ -65,6 +69,7 @@ public class RunnableCostumerGroupManager implements Runnable{
             }
             rentalRequest.getValue()._asset._status=AssetStatus.UnAvailale;
             rentalRequest.getValue()._requestStatus=RentalRequestStatus.Complete;
+            numberOfCompleteRequests.decrementAndGet();
             damageReport=new DamageReport(rentalRequest.getValue()._asset, totalDamage);
             this._assets.addDamagedAsset(rentalRequest.getValue()._asset);
             int moneyGined=rentalRequest.getValue()._durationOfStay*rentalRequest.getValue()._asset._costPerNight*_costumerGroupDetails.numOfMembers;

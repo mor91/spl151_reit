@@ -22,7 +22,9 @@ public class CallableSimulateStayInAsset implements Callable{
     
     @Override
     public Object call() throws Exception {
-        Thread.sleep(this.currentRentalRequest._durationOfStay*2400);
+        System.out.println(_customer._name+" stayInAsset");
+        Thread.sleep(this.currentRentalRequest._durationOfStay*24000);
+        System.out.println(_customer._name+" finish");
         return this.damagePercentage();
     }
     private double damagePercentage(){

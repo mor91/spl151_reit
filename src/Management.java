@@ -37,9 +37,11 @@ public class Management {
     Statistics _statistics;
     AtomicInteger numberOfRentalRequests ;
     AtomicInteger numberOfMaintainancePersons;
+    AtomicInteger numberOfCompleteRequests;
 
     public void setNumberOfRentalRequests(AtomicInteger numberOfRentalRequests) {
         this.numberOfRentalRequests.set(numberOfRentalRequests.get());
+        numberOfCompleteRequests.set(numberOfRentalRequests.get());
     }
 
     public void setNumberOfMaintenancePersons(AtomicInteger numberOfMaintainancePersons) {
@@ -53,6 +55,7 @@ public class Management {
         this._statistics=new Statistics();
         this.numberOfMaintainancePersons=new AtomicInteger(0);
         this.numberOfRentalRequests=new AtomicInteger(0);
+        this.numberOfCompleteRequests=new AtomicInteger(0);
         
     }
     
@@ -61,7 +64,7 @@ public class Management {
         clerksMap.put(clerkDetails._name, runnableClerk);
     } 
     public void addCostumerGroup(CustomerGroupDetails costumerGroupDetails){
-        RunnableCostumerGroupManager runnableCostumerGroupManager=new RunnableCostumerGroupManager(costumerGroupDetails, rentalRequestsQueue, _assets,_statistics);
+        RunnableCostumerGroupManager runnableCostumerGroupManager=new RunnableCostumerGroupManager(costumerGroupDetails, rentalRequestsQueue, _assets,_statistics, numberOfCompleteRequests);
         costumerGroupManagersList.add(runnableCostumerGroupManager);
     }
     public void addItemRepairTool(String contentName,RepairToolInformation repairToolInformation){
@@ -107,8 +110,8 @@ public class Management {
                     }
                  
                 }
-                else printStatistiscs();
-            }
+                
+                        }
             
         });
         for(Map.Entry<String, RunnableClerk> clerk:clerksMap.entrySet()){
@@ -124,7 +127,25 @@ public class Management {
         for (Thread customerGroupThread : customerGroupThreads) {
             customerGroupThread.start();
         }
-        
+        if(numberOfCompleteRequests.get()==0){
+                    printStatistiscs();
+                    //shutdown threads
+                    for (Thread clerkThread : clerkThreads) {
+                        try {
+                            clerkThread.join();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Management.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    for (Thread customerGroupThread : customerGroupThreads) {
+                        try {
+                            customerGroupThread.join();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Management.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    executorService.shutdown();
+        }
 
     }
    
